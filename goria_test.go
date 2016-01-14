@@ -22,12 +22,24 @@ func TestGoria(t *testing.T) {
 	}
 
 	if l.Len() != 128 {
-		t.Fatalf("bad len: %v", l.Len())
+		t.Fatalf("Wrong len %v", l.Len())
 	}
 
 	for i, k := range l.Keys() {
 		if v, ok := l.Get(k); !ok || v != k || v != i+128 {
-			t.Fatalf("bad key: %v", k)
+			t.Fatalf("wrong key: %v", k)
 		}
+	}
+
+	var result = l.PutIfAbsent(253, 22)
+
+	if result {
+		t.Fatalf("key %v should be already be associated with a value", 253)
+	}
+
+	result = l.PutIfAbsent(279, 22)
+
+	if !result {
+		t.Fatalf("key %v should not be associated with a value", 279)
 	}
 }

@@ -49,6 +49,21 @@ func (c *Goria) Put(key, value interface{}) bool {
 	return true
 }
 
+func (c *Goria) PutIfAbsent(key, value interface{}) bool {
+	var element, exists = c.items[key]
+	if !exists && element == nil {
+		item := &entry{key, value}
+		element := c.evictionList.PushFront(item)
+		c.items[key] = element
+
+		if c.evictionList.Len() > c.size {
+			c.removeFromTail()
+		}
+		return true
+	}
+	return false
+}
+
 func (c *Goria) Get(key interface{}) (value interface{}, exists bool) {
 	if item, exists := c.items[key]; exists {
 		c.evictionList.MoveToFront(item)
