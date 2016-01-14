@@ -1,7 +1,6 @@
 package goria
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -19,12 +18,16 @@ func TestGoria(t *testing.T) {
 	}
 
 	for i := 0; i < 256; i++ {
-		l.Add(i, i)
+		l.Put(i, i)
 	}
 
-	if l.Len() != 256 {
+	if l.Len() != 128 {
 		t.Fatalf("bad len: %v", l.Len())
 	}
 
-	fmt.Printf("%v\n", l.Len())
+	for i, k := range l.Keys() {
+		if v, ok := l.Get(k); !ok || v != k || v != i+128 {
+			t.Fatalf("bad key: %v", k)
+		}
+	}
 }
