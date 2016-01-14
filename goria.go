@@ -72,6 +72,20 @@ func (c *Goria) Get(key interface{}) (value interface{}, exists bool) {
 	return
 }
 
+func (c *Goria) Replace(key, oldValue interface{}, newValue interface{}) bool {
+	var element, exists = c.items[key]
+	if exists && element != nil {
+		c.evictionList.MoveToFront(element)
+		element.Value.(*entry).value = newValue
+
+		if c.evictionList.Len() > c.size {
+			c.removeFromTail()
+		}
+		return true
+	}
+	return false
+}
+
 func (c *Goria) Remove(key interface{}) bool {
 	if element, exists := c.items[key]; exists {
 		c.removeElement(element)
@@ -90,16 +104,16 @@ func (c *Goria) Keys() []interface{} {
 	return keys
 }
 
+func (c *Goria) Len() int {
+	return c.evictionList.Len()
+}
+
 func (c *Goria) removeFromTail() {
 	element := c.evictionList.Back()
 
 	if element != nil {
 		c.removeElement(element)
 	}
-}
-
-func (c *Goria) Len() int {
-	return c.evictionList.Len()
 }
 
 func (c *Goria) removeElement(el *list.Element) {
