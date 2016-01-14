@@ -7,7 +7,7 @@ import (
 
 type EvictionCallback func(key interface{}, value interface{})
 
-type Goria struct {
+type GoriaLRU struct {
 	size         int
 	items        map[interface{}]*list.Element
 	evictionList *list.List
@@ -19,11 +19,11 @@ type entry struct {
 	value interface{}
 }
 
-func newGoria(size int, evictionC EvictionCallback) (*Goria, error) {
+func newGoriaLRU(size int, evictionC EvictionCallback) (*GoriaLRU, error) {
 	if size <= 0 {
 		return nil, errors.New("The Goria Cache need a positive value as size")
 	}
-	c := &Goria{
+	c := &GoriaLRU{
 		size:         size,
 		evictionList: list.New(),
 		items:        make(map[interface{}]*list.Element),
@@ -32,7 +32,7 @@ func newGoria(size int, evictionC EvictionCallback) (*Goria, error) {
 	return c, nil
 }
 
-func (c *Goria) Put(key, value interface{}) bool {
+func (c *GoriaLRU) Put(key, value interface{}) bool {
 	if item, ok := c.items[key]; ok {
 		c.evictionList.MoveToFront(item)
 		item.Value.(*entry).value = value
@@ -49,7 +49,7 @@ func (c *Goria) Put(key, value interface{}) bool {
 	return true
 }
 
-func (c *Goria) PutIfAbsent(key, value interface{}) bool {
+func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 	var element, exists = c.items[key]
 	if !exists && element == nil {
 		item := &entry{key, value}
@@ -64,7 +64,7 @@ func (c *Goria) PutIfAbsent(key, value interface{}) bool {
 	return false
 }
 
-func (c *Goria) Get(key interface{}) (value interface{}, exists bool) {
+func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
 	if item, exists := c.items[key]; exists {
 		c.evictionList.MoveToFront(item)
 		return item.Value.(*entry).value, true
@@ -72,21 +72,17 @@ func (c *Goria) Get(key interface{}) (value interface{}, exists bool) {
 	return
 }
 
-func (c *Goria) Replace(key, oldValue interface{}, newValue interface{}) bool {
+func (c *GoriaLRU) Replace(key, oldValue interface{}, newValue interface{}) bool {
 	var element, exists = c.items[key]
 	if exists && element != nil {
 		c.evictionList.MoveToFront(element)
 		element.Value.(*entry).value = newValue
-
-		if c.evictionList.Len() > c.size {
-			c.removeFromTail()
-		}
 		return true
 	}
 	return false
 }
 
-func (c *Goria) Remove(key interface{}) bool {
+func (c *GoriaLRU) Remove(key interface{}) bool {
 	if element, exists := c.items[key]; exists {
 		c.removeElement(element)
 		return true
@@ -94,7 +90,7 @@ func (c *Goria) Remove(key interface{}) bool {
 	return false
 }
 
-func (c *Goria) Keys() []interface{} {
+func (c *GoriaLRU) Keys() []interface{} {
 	keys := make([]interface{}, len(c.items))
 	i := 0
 	for ent := c.evictionList.Back(); ent != nil; ent = ent.Prev() {
@@ -104,11 +100,11 @@ func (c *Goria) Keys() []interface{} {
 	return keys
 }
 
-func (c *Goria) Len() int {
+func (c *GoriaLRU) Len() int {
 	return c.evictionList.Len()
 }
 
-func (c *Goria) removeFromTail() {
+func (c *GoriaLRU) removeFromTail() {
 	element := c.evictionList.Back()
 
 	if element != nil {
@@ -116,7 +112,7 @@ func (c *Goria) removeFromTail() {
 	}
 }
 
-func (c *Goria) removeElement(el *list.Element) {
+func (c *GoriaLRU) removeElement(el *list.Element) {
 	c.evictionList.Remove(el)
 	entry := el.Value.(*entry)
 	delete(c.items, entry.key)

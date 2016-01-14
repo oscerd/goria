@@ -11,7 +11,7 @@ func TestGoria(t *testing.T) {
 		}
 	}
 
-	l, err := newGoria(128, onEvicted)
+	l, err := newGoriaLRU(128, onEvicted)
 
 	if err != nil {
 		t.Fatalf("err: %v", err)
@@ -57,6 +57,6 @@ func TestGoria(t *testing.T) {
 	res := l.evictionList.Front()
 
 	if res.Value.(*entry).value != newValue {
-		t.Fatalf("key %v should have a value of 47 instead has a value of %v", otherKey, res.Value.(*entry).value)
+		t.Fatalf("key %v should have a value of %v instead has a value of %v", otherKey, newValue, res.Value.(*entry).value)
 	}
 }
