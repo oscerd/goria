@@ -91,8 +91,17 @@ func (c *GoriaLRU) ReplaceWithKeyOnly(key, newValue interface{}) bool {
 	return false
 }
 
-func (c *GoriaLRU) Remove(key interface{}) bool {
+func (c *GoriaLRU) RemoveWithKeyOnly(key interface{}) bool {
 	if element, exists := c.items[key]; exists {
+		c.removeElement(element)
+		return true
+	}
+	return false
+}
+
+func (c *GoriaLRU) Remove(key interface{}, oldValue interface{}) bool {
+	var element, exists = c.items[key]
+	if exists && element.Value.(*entry).value == oldValue {
 		c.removeElement(element)
 		return true
 	}

@@ -67,9 +67,16 @@ func TestGoria(t *testing.T) {
 		t.Fatalf("key %v should have a value of %v instead has a value of %v", otherKey, newValue, res.Value.(*entry).value)
 	}
 
-	result = l.Remove(otherKey)
+	result = l.RemoveWithKeyOnly(otherKey)
 
 	if !result {
 		t.Fatalf("key %v should be removed", otherKey)
+	}
+
+	otherKey, oldValue = 252, 252
+	result = l.Remove(otherKey, oldValue)
+
+	if !result {
+		t.Fatalf("key %v should be removed with a value %v", otherKey, oldValue)
 	}
 }
