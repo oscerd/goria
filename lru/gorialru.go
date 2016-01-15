@@ -32,11 +32,11 @@ func newGoriaLRU(size int, evictionC EvictionCallback) (*GoriaLRU, error) {
 	return c, nil
 }
 
-func (c *GoriaLRU) Put(key, value interface{}) bool {
+func (c *GoriaLRU) Put(key, value interface{}) {
 	if item, ok := c.items[key]; ok {
 		c.evictionList.MoveToFront(item)
 		item.Value.(*entry).value = value
-		return false
+		return
 	}
 
 	item := &entry{key, value}
@@ -46,7 +46,6 @@ func (c *GoriaLRU) Put(key, value interface{}) bool {
 	if c.evictionList.Len() > c.size {
 		c.removeFromTail()
 	}
-	return true
 }
 
 func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
