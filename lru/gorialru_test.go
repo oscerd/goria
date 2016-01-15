@@ -5,13 +5,8 @@ import (
 )
 
 func TestGoria(t *testing.T) {
-	onEvicted := func(k interface{}, v interface{}) {
-		if k != v {
-			t.Fatalf("Evict values not equal (%v!=%v)", k, v)
-		}
-	}
 
-	l, err := newGoriaLRU(128, onEvicted)
+	l, err := newGoriaLRU(128, nil)
 
 	if err != nil {
 		t.Fatalf("err: %v", err)
@@ -70,5 +65,11 @@ func TestGoria(t *testing.T) {
 
 	if res.Value.(*entry).value != newValue+1 {
 		t.Fatalf("key %v should have a value of %v instead has a value of %v", otherKey, newValue, res.Value.(*entry).value)
+	}
+
+	result = l.Remove(otherKey)
+
+	if !result {
+		t.Fatalf("key %v should be removed", otherKey)
 	}
 }
