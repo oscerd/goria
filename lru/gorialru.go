@@ -81,6 +81,16 @@ func (c *GoriaLRU) Replace(key, oldValue interface{}, newValue interface{}) bool
 	return false
 }
 
+func (c *GoriaLRU) ReplaceWithKeyOnly(key, newValue interface{}) bool {
+	var element, exists = c.items[key]
+	if exists && element != nil {
+		c.evictionList.MoveToFront(element)
+		element.Value.(*entry).value = newValue
+		return true
+	}
+	return false
+}
+
 func (c *GoriaLRU) Remove(key interface{}) bool {
 	if element, exists := c.items[key]; exists {
 		c.removeElement(element)

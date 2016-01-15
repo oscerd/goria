@@ -54,15 +54,21 @@ func TestGoria(t *testing.T) {
 		t.Fatalf("key %v should not be replaced with a value %v, since it's current value is %v and not %v", otherKey, newValue+2, newValue, newValue+1)
 	}
 
+	result = l.ReplaceWithKeyOnly(otherKey, newValue+1)
+
+	if !result {
+		t.Fatalf("key %v should be replaced with a value %v", otherKey, newValue+1)
+	}
+
 	v, ok := l.Get(otherKey)
 
-	if ok && v != newValue {
+	if ok && v != newValue+1 {
 		t.Fatalf("key %v should have a value of %v", otherKey, newValue)
 	}
 
 	res := l.evictionList.Front()
 
-	if res.Value.(*entry).value != newValue {
+	if res.Value.(*entry).value != newValue+1 {
 		t.Fatalf("key %v should have a value of %v instead has a value of %v", otherKey, newValue, res.Value.(*entry).value)
 	}
 }
