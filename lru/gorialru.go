@@ -73,7 +73,7 @@ func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
 
 func (c *GoriaLRU) Replace(key, oldValue interface{}, newValue interface{}) bool {
 	var element, exists = c.items[key]
-	if exists && element != nil {
+	if exists && element.Value.(*entry).value == oldValue {
 		c.evictionList.MoveToFront(element)
 		element.Value.(*entry).value = newValue
 		return true

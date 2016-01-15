@@ -48,6 +48,12 @@ func TestGoria(t *testing.T) {
 
 	l.Replace(otherKey, oldValue, newValue)
 
+	result = l.Replace(otherKey, newValue+1, newValue+2)
+
+	if result {
+		t.Fatalf("key %v should not be replaced with a value %v, since it's current value is %v and not %v", otherKey, newValue+2, newValue, newValue+1)
+	}
+
 	v, ok := l.Get(otherKey)
 
 	if ok && v != newValue {
