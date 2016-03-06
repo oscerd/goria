@@ -1,6 +1,7 @@
 package goria
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -78,5 +79,19 @@ func TestGoria(t *testing.T) {
 
 	if !result {
 		t.Fatalf("key %v should be removed with a value %v", otherKey, oldValue)
+	}
+
+	otherKey = 248
+	var getAndRemoveResult = l.GetAndRemove(otherKey)
+
+	if getAndRemoveResult != 248 {
+		t.Fatalf("key %v should be removed with a value %v", otherKey)
+	}
+
+	otherKey = 2900
+	getAndRemoveResult = l.GetAndRemove(otherKey)
+
+	if getAndRemoveResult != nil {
+		t.Fatalf("key %v should not be removed with a value")
 	}
 }

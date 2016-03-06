@@ -108,6 +108,15 @@ func (c *GoriaLRU) Remove(key interface{}, oldValue interface{}) bool {
 	return false
 }
 
+func (c *GoriaLRU) GetAndRemove(key interface{}) interface{} {
+	v, ok := c.Get(key)
+	if ok {
+		c.RemoveWithKeyOnly(key)
+		return v
+	}
+	return v
+}
+
 func (c *GoriaLRU) Keys() []interface{} {
 	keys := make([]interface{}, len(c.items))
 	i := 0
