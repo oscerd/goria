@@ -91,6 +91,15 @@ func (c *GoriaLRU) ReplaceWithKeyOnly(key, newValue interface{}) bool {
 	return false
 }
 
+func (c *GoriaLRU) GetAndReplace(key interface{}, newValue interface{}) interface{} {
+	v, ok := c.Get(key)
+	if ok {
+		c.ReplaceWithKeyOnly(key, newValue)
+		return v
+	}
+	return nil
+}
+
 func (c *GoriaLRU) RemoveWithKeyOnly(key interface{}) bool {
 	if element, exists := c.items[key]; exists {
 		c.removeElement(element)
@@ -114,7 +123,7 @@ func (c *GoriaLRU) GetAndRemove(key interface{}) interface{} {
 		c.RemoveWithKeyOnly(key)
 		return v
 	}
-	return v
+	return nil
 }
 
 func (c *GoriaLRU) Keys() []interface{} {
