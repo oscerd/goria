@@ -92,6 +92,6 @@ func TestGoria(t *testing.T) {
 	getAndRemoveResult = l.GetAndRemove(otherKey)
 
 	if getAndRemoveResult != nil {
-		t.Fatalf("key %v should not be removed with a value")
+		t.Fatalf("key %v should not be removed")
 	}
 }
