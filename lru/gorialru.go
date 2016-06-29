@@ -129,6 +129,13 @@ func (c *GoriaLRU) RemoveAll(m map[interface{}]interface{}) {
 	}
 }
 
+func (c *GoriaLRU) RemoveAllWithoutParameters() {
+	var keys = c.Keys()
+	for i := 0; i < len(keys); i++ {
+		c.RemoveWithKeyOnly(keys[i])
+	}
+}
+
 func (c *GoriaLRU) GetAndRemove(key interface{}) interface{} {
 	v, ok := c.Get(key)
 	if ok {

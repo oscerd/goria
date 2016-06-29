@@ -128,4 +128,18 @@ func TestGoria(t *testing.T) {
 	if ok {
 		t.Fatalf("key %v shouldn't be in the cache", newKey)
 	}
+
+	l.PutAll(commits)
+
+	l.RemoveAllWithoutParameters()
+
+	v, ok = l.Get(newKey)
+
+	if ok {
+		t.Fatalf("key %v shouldn't be in the cache", newKey)
+	}
+
+	if l.Len() != 0 {
+		t.Fatalf("Cache should be empty")
+	}
 }
