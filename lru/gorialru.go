@@ -48,6 +48,12 @@ func (c *GoriaLRU) Put(key, value interface{}) {
 	}
 }
 
+func (c *GoriaLRU) PutAll(m map[interface{}]interface{}) {
+	for key, value := range m {
+		c.Put(key, value)
+	}
+}
+
 func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 	var element, exists = c.items[key]
 	if !exists && element == nil {

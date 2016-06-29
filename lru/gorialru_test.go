@@ -1,8 +1,6 @@
 package goria
 
-import (
-	"testing"
-)
+import "testing"
 
 func TestGoria(t *testing.T) {
 
@@ -106,5 +104,20 @@ func TestGoria(t *testing.T) {
 
 	if getAndReplaceResult != nil {
 		t.Fatalf("key %v should not be replaced", otherKey)
+	}
+
+	commits := map[interface{}]interface{}{
+		253: 24,
+		267: 22,
+		280: 21,
+		281: 23,
+	}
+	var newKey = 253
+	newValue = 24
+	l.PutAll(commits)
+	v, ok = l.Get(newKey)
+
+	if v != newValue {
+		t.Fatalf("key %v should be %v", newKey, newValue)
 	}
 }
