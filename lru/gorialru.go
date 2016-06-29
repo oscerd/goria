@@ -123,6 +123,12 @@ func (c *GoriaLRU) Remove(key interface{}, oldValue interface{}) bool {
 	return false
 }
 
+func (c *GoriaLRU) RemoveAll(m map[interface{}]interface{}) {
+	for key, value := range m {
+		c.Remove(key, value)
+	}
+}
+
 func (c *GoriaLRU) GetAndRemove(key interface{}) interface{} {
 	v, ok := c.Get(key)
 	if ok {
