@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/oscerd/goria",
+	"ImportPath": "github.com/oscerd/goria/Godeps",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v74",
 	"Deps": []
