@@ -8,8 +8,8 @@ import (
 type EvictionCallback func(key interface{}, value interface{})
 
 type GoriaLRU struct {
-	name         string
-	size         int
+	Name         string
+	Size         int
 	items        map[interface{}]*list.Element
 	evictionList *list.List
 	onEvict      EvictionCallback
@@ -25,8 +25,8 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback) (*GoriaLRU, 
 		return nil, errors.New("The Goria Cache need a positive value as size")
 	}
 	c := &GoriaLRU{
-		name:         name,
-		size:         size,
+		Name:         name,
+		Size:         size,
 		evictionList: list.New(),
 		items:        make(map[interface{}]*list.Element),
 		onEvict:      evictionC,
@@ -45,7 +45,7 @@ func (c *GoriaLRU) Put(key, value interface{}) {
 	element := c.evictionList.PushFront(item)
 	c.items[key] = element
 
-	if c.evictionList.Len() > c.size {
+	if c.evictionList.Len() > c.Size {
 		c.removeFromTail()
 	}
 }
@@ -63,7 +63,7 @@ func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 		element := c.evictionList.PushFront(item)
 		c.items[key] = element
 
-		if c.evictionList.Len() > c.size {
+		if c.evictionList.Len() > c.Size {
 			c.removeFromTail()
 		}
 		return true
@@ -161,8 +161,8 @@ func (c *GoriaLRU) Len() int {
 	return c.evictionList.Len()
 }
 
-func (c *GoriaLRU) Name() string {
-	return c.name
+func (c *GoriaLRU) GetName() string {
+	return c.Name
 }
 
 func (c *GoriaLRU) removeFromTail() {

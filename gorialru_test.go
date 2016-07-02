@@ -14,8 +14,8 @@ func TestGoria(t *testing.T) {
 		l.Put(i, i)
 	}
 
-	if l.Name() != "sample" {
-		t.Fatalf("Wrong name %v", l.Name())
+	if l.GetName() != "sample" {
+		t.Fatalf("Wrong name %v", l.GetName())
 	}
 
 	if l.Len() != 128 {
