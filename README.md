@@ -9,7 +9,7 @@ Goria is based on SimpleLru by Hashicorp https://github.com/hashicorp/golang-lru
 Working with Goria is simple
 
 ```golang
-l, err := newGoriaLRU(128, nil)
+l, err := newGoriaLRU("sample", 128, nil)
 if err != nil {
 	t.Fatalf("err: %v", err)
 }
