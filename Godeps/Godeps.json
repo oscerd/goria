@@ -1,0 +1,6 @@
+{
+	"ImportPath": "github.com/oscerd/goria",
+	"GoVersion": "go1.5",
+	"GodepVersion": "v74",
+	"Deps": []
+}
