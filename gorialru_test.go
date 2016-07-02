@@ -4,7 +4,7 @@ import "testing"
 
 func TestGoria(t *testing.T) {
 
-	l, err := newGoriaLRU(128, nil)
+	l, err := newGoriaLRU("sample", 128, nil)
 
 	if err != nil {
 		t.Fatalf("err: %v", err)
@@ -12,6 +12,10 @@ func TestGoria(t *testing.T) {
 
 	for i := 0; i < 256; i++ {
 		l.Put(i, i)
+	}
+
+	if l.Name() != "sample" {
+		t.Fatalf("Wrong name %v", l.Name())
 	}
 
 	if l.Len() != 128 {

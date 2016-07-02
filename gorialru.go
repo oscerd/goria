@@ -8,6 +8,7 @@ import (
 type EvictionCallback func(key interface{}, value interface{})
 
 type GoriaLRU struct {
+	name         string
 	size         int
 	items        map[interface{}]*list.Element
 	evictionList *list.List
@@ -19,11 +20,12 @@ type entry struct {
 	value interface{}
 }
 
-func newGoriaLRU(size int, evictionC EvictionCallback) (*GoriaLRU, error) {
+func newGoriaLRU(name string, size int, evictionC EvictionCallback) (*GoriaLRU, error) {
 	if size <= 0 {
 		return nil, errors.New("The Goria Cache need a positive value as size")
 	}
 	c := &GoriaLRU{
+		name:         name,
 		size:         size,
 		evictionList: list.New(),
 		items:        make(map[interface{}]*list.Element),
@@ -157,6 +159,10 @@ func (c *GoriaLRU) Keys() []interface{} {
 
 func (c *GoriaLRU) Len() int {
 	return c.evictionList.Len()
+}
+
+func (c *GoriaLRU) Name() string {
+	return c.name
 }
 
 func (c *GoriaLRU) removeFromTail() {
