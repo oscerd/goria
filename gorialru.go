@@ -82,6 +82,18 @@ func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
 	return
 }
 
+func (c *GoriaLRU) GetAll(m map[interface{}]interface{}) map[interface{}]interface{} {
+	returnedMap := make(map[interface{}]interface{})
+
+	for k := range m {
+		value, exists := c.Get(k)
+		if exists {
+			returnedMap[k] = value
+		}
+	}
+	return returnedMap
+}
+
 func (c *GoriaLRU) Replace(key, oldValue interface{}, newValue interface{}) bool {
 	var element, exists = c.items[key]
 	if exists && element.Value.(*entry).value == oldValue {

@@ -119,6 +119,17 @@ func TestGoria(t *testing.T) {
 	var newKey = 253
 	newValue = 24
 	l.PutAll(commits)
+
+	returnedCommits := make(map[interface{}]interface{})
+
+	returnedCommits = l.GetAll(commits)
+
+	for k, v := range commits {
+		if returnedCommits[k] != v {
+			t.Fatalf("key %v should have value %v", k, v)
+		}
+	}
+
 	v, ok = l.Get(newKey)
 
 	if v != newValue {
