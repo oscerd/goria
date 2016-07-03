@@ -44,6 +44,8 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback) (*GoriaLRU, 
 		stats: CacheStats{
 			Items:     0,
 			Evictions: 0,
+			Gets:      0,
+			Hits:      0,
 		},
 	}
 	return c, nil
@@ -90,8 +92,10 @@ func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 }
 
 func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
+	c.stats.Gets++
 	if item, exists := c.items[key]; exists {
 		c.evictionList.MoveToFront(item)
+		c.stats.Hits++
 		return item.Value.(*entry).value, true
 	}
 	return

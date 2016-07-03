@@ -270,6 +270,14 @@ func TestGoria(t *testing.T) {
 		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
 	}
 
+	if l.stats.Gets != 139 {
+		t.Fatalf("Wrong Gets stat %v", l.stats.Gets)
+	}
+
+	if l.stats.Hits != 136 {
+		t.Fatalf("Wrong Gets stat %v", l.stats.Hits)
+	}
+
 	v, ok = l.Get(newKey)
 
 	if ok {
