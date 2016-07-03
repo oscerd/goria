@@ -28,16 +28,44 @@ func TestGoria(t *testing.T) {
 		}
 	}
 
+	if l.stats.Items != 128 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 128 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
+
+	if l.Len() != 128 {
+		t.Fatalf("Wrong len %v", l.Len())
+	}
+
 	key, value := 253, 22
 	otherKey, oldValue, newValue := 279, 22, 47
 
 	var result = l.PutIfAbsent(key, value)
+
+	if l.stats.Items != 128 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 128 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
 
 	if result {
 		t.Fatalf("key %v should be already be associated with a value", key)
 	}
 
 	result = l.PutIfAbsent(otherKey, value)
+
+	if l.stats.Items != 128 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 129 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
 
 	if !result {
 		t.Fatalf("key %v should not be associated with a value", otherKey)
@@ -47,6 +75,14 @@ func TestGoria(t *testing.T) {
 
 	result = l.Replace(otherKey, newValue+1, newValue+2)
 
+	if l.stats.Items != 128 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 129 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
+
 	if result {
 		t.Fatalf("key %v should not be replaced with a value %v, since it's current value is %v and not %v", otherKey, newValue+2, newValue, newValue+1)
 	}
@@ -55,6 +91,14 @@ func TestGoria(t *testing.T) {
 
 	if !result {
 		t.Fatalf("key %v should be replaced with a value %v", otherKey, newValue+1)
+	}
+
+	if l.stats.Items != 128 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 129 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
 	}
 
 	v, ok := l.Get(otherKey)
@@ -75,11 +119,27 @@ func TestGoria(t *testing.T) {
 		t.Fatalf("key %v should be removed", otherKey)
 	}
 
+	if l.stats.Items != 127 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 130 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
+
 	otherKey, oldValue = 252, 252
 	result = l.Remove(otherKey, oldValue)
 
 	if !result {
 		t.Fatalf("key %v should be removed with a value %v", otherKey, oldValue)
+	}
+
+	if l.stats.Items != 126 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 131 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
 	}
 
 	otherKey = 248
@@ -89,11 +149,27 @@ func TestGoria(t *testing.T) {
 		t.Fatalf("key %v should be removed with a value %v", otherKey)
 	}
 
+	if l.stats.Items != 125 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 132 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
+
 	otherKey = 2900
 	getAndRemoveResult = l.GetAndRemove(otherKey)
 
 	if getAndRemoveResult != nil {
 		t.Fatalf("key %v should not be removed")
+	}
+
+	if l.stats.Items != 125 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 132 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
 	}
 
 	otherKey, oldValue, newValue = 247, 247, 1200
@@ -103,11 +179,27 @@ func TestGoria(t *testing.T) {
 		t.Fatalf("key %v should be replaced with an original value of %v", otherKey, oldValue)
 	}
 
+	if l.stats.Items != 125 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 132 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
+
 	otherKey, oldValue, newValue = 2900, 247, 1200
 	getAndReplaceResult = l.GetAndReplace(otherKey, newValue)
 
 	if getAndReplaceResult != nil {
 		t.Fatalf("key %v should not be replaced", otherKey)
+	}
+
+	if l.stats.Items != 125 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 132 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
 	}
 
 	commits := map[interface{}]interface{}{
@@ -119,6 +211,14 @@ func TestGoria(t *testing.T) {
 	var newKey = 253
 	newValue = 24
 	l.PutAll(commits)
+
+	if l.stats.Items != 128 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 132 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
 
 	returnedCommits := make(map[interface{}]interface{})
 
@@ -138,6 +238,14 @@ func TestGoria(t *testing.T) {
 
 	l.RemoveAll(commits)
 
+	if l.stats.Items != 124 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 136 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
+
 	v, ok = l.Get(newKey)
 
 	if ok {
@@ -153,6 +261,14 @@ func TestGoria(t *testing.T) {
 	}
 
 	l.RemoveAllWithoutParameters()
+
+	if l.stats.Items != 0 {
+		t.Fatalf("Wrong Items stat %v", l.stats.Items)
+	}
+
+	if l.stats.Evictions != 264 {
+		t.Fatalf("Wrong Evictions stat %v", l.stats.Evictions)
+	}
 
 	v, ok = l.Get(newKey)
 

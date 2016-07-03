@@ -16,6 +16,14 @@ type GoriaLRU struct {
 	items        map[interface{}]*list.Element
 	evictionList *list.List
 	onEvict      EvictionCallback
+	stats        CacheStats
+}
+
+type CacheStats struct {
+	Items     int64
+	Gets      int64
+	Hits      int64
+	Evictions int64
 }
 
 type entry struct {
@@ -33,6 +41,10 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback) (*GoriaLRU, 
 		evictionList: list.New(),
 		items:        make(map[interface{}]*list.Element),
 		onEvict:      evictionC,
+		stats: CacheStats{
+			Items:     0,
+			Evictions: 0,
+		},
 	}
 	return c, nil
 }
@@ -51,6 +63,8 @@ func (c *GoriaLRU) Put(key, value interface{}) {
 	if c.evictionList.Len() > c.Size {
 		c.removeFromTail()
 	}
+
+	c.stats.Items++
 }
 
 func (c *GoriaLRU) PutAll(m map[interface{}]interface{}) {
@@ -69,6 +83,7 @@ func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 		if c.evictionList.Len() > c.Size {
 			c.removeFromTail()
 		}
+		c.stats.Items++
 		return true
 	}
 	return false
@@ -205,4 +220,6 @@ func (c *GoriaLRU) removeElement(el *list.Element) {
 	if c.onEvict != nil {
 		c.onEvict(entry.key, entry.value)
 	}
+	c.stats.Evictions++
+	c.stats.Items--
 }
