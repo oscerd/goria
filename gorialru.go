@@ -6,6 +6,7 @@ package goria
 import (
 	"container/list"
 	"errors"
+	"fmt"
 )
 
 type EvictionCallback func(key interface{}, value interface{})
@@ -16,6 +17,7 @@ type GoriaLRU struct {
 	items        map[interface{}]*list.Element
 	evictionList *list.List
 	onEvict      EvictionCallback
+	statsEnabled bool
 	stats        CacheStats
 }
 
@@ -32,16 +34,18 @@ type entry struct {
 	value interface{}
 }
 
-func newGoriaLRU(name string, size int, evictionC EvictionCallback) (*GoriaLRU, error) {
+func newGoriaLRU(name string, size int, evictionC EvictionCallback, statsEnabled bool) (*GoriaLRU, error) {
 	if size <= 0 {
 		return nil, errors.New("The Goria Cache need a positive value as size")
 	}
+	fmt.Println(statsEnabled)
 	c := &GoriaLRU{
 		Name:         name,
 		Size:         size,
 		evictionList: list.New(),
 		items:        make(map[interface{}]*list.Element),
 		onEvict:      evictionC,
+		statsEnabled: statsEnabled,
 		stats: CacheStats{
 			Items:     0,
 			Evictions: 0,
@@ -68,7 +72,9 @@ func (c *GoriaLRU) Put(key, value interface{}) {
 		c.removeFromTail()
 	}
 
-	c.stats.Items++
+	if c.IsStatsEnabled() {
+		c.stats.Items++
+	}
 }
 
 func (c *GoriaLRU) PutAll(m map[interface{}]interface{}) {
@@ -87,20 +93,28 @@ func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 		if c.evictionList.Len() > c.Size {
 			c.removeFromTail()
 		}
-		c.stats.Items++
+		if c.IsStatsEnabled() {
+			c.stats.Items++
+		}
 		return true
 	}
 	return false
 }
 
 func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
-	c.stats.Gets++
+	if c.IsStatsEnabled() {
+		c.stats.Gets++
+	}
 	if item, exists := c.items[key]; exists {
 		c.evictionList.MoveToFront(item)
-		c.stats.Hits++
+		if c.IsStatsEnabled() {
+			c.stats.Hits++
+		}
 		return item.Value.(*entry).value, true
 	}
-	c.stats.Miss++
+	if c.IsStatsEnabled() {
+		c.stats.Miss++
+	}
 	return
 }
 
@@ -211,6 +225,14 @@ func (c *GoriaLRU) GetName() string {
 	return c.Name
 }
 
+func (c *GoriaLRU) IsStatsEnabled() bool {
+	return c.statsEnabled
+}
+
+func (c *GoriaLRU) GetStats() CacheStats {
+	return c.stats
+}
+
 func (c *GoriaLRU) removeFromTail() {
 	element := c.evictionList.Back()
 
@@ -227,6 +249,9 @@ func (c *GoriaLRU) removeElement(el *list.Element) {
 	if c.onEvict != nil {
 		c.onEvict(entry.key, entry.value)
 	}
-	c.stats.Evictions++
-	c.stats.Items--
+
+	if c.IsStatsEnabled() {
+		c.stats.Evictions++
+		c.stats.Items--
+	}
 }
