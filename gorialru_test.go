@@ -135,6 +135,12 @@ func TestGoria(t *testing.T) {
 
 	l.PutAll(commits)
 
+	ok = l.ContainsKey(267)
+
+	if !ok {
+		t.Fatalf("key %v should be in the cache", 267)
+	}
+
 	l.RemoveAllWithoutParameters()
 
 	v, ok = l.Get(newKey)

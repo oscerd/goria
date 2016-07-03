@@ -160,6 +160,15 @@ func (c *GoriaLRU) Keys() []interface{} {
 	return keys
 }
 
+func (c *GoriaLRU) ContainsKey(key interface{}) bool {
+	for ent := c.evictionList.Back(); ent != nil; ent = ent.Prev() {
+		if ent.Value.(*entry).key == key {
+			return true
+		}
+	}
+	return false
+}
+
 func (c *GoriaLRU) Len() int {
 	return c.evictionList.Len()
 }
