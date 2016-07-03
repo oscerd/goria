@@ -1,3 +1,6 @@
+/*
+Package Goria provides the functionality of an LRU Cache with an eye to JSR 107
+*/
 package goria
 
 import (
