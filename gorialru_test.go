@@ -291,4 +291,5 @@ func TestGoria(t *testing.T) {
 	if l.Len() != 0 {
 		t.Fatalf("Cache should be empty")
 	}
+
 }
