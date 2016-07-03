@@ -6,7 +6,6 @@ package goria
 import (
 	"container/list"
 	"errors"
-	"fmt"
 )
 
 type EvictionCallback func(key interface{}, value interface{})
@@ -38,7 +37,6 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback, statsEnabled
 	if size <= 0 {
 		return nil, errors.New("The Goria Cache need a positive value as size")
 	}
-	fmt.Println(statsEnabled)
 	c := &GoriaLRU{
 		Name:         name,
 		Size:         size,
