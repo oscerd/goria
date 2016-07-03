@@ -24,6 +24,7 @@ type CacheStats struct {
 	Gets      int64
 	Hits      int64
 	Evictions int64
+	Miss      int64
 }
 
 type entry struct {
@@ -46,6 +47,7 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback) (*GoriaLRU, 
 			Evictions: 0,
 			Gets:      0,
 			Hits:      0,
+			Miss:      0,
 		},
 	}
 	return c, nil
@@ -98,6 +100,7 @@ func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
 		c.stats.Hits++
 		return item.Value.(*entry).value, true
 	}
+	c.stats.Miss++
 	return
 }
 

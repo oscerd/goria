@@ -275,7 +275,11 @@ func TestGoria(t *testing.T) {
 	}
 
 	if l.stats.Hits != 136 {
-		t.Fatalf("Wrong Gets stat %v", l.stats.Hits)
+		t.Fatalf("Wrong Hits stat %v", l.stats.Hits)
+	}
+
+	if l.stats.Miss != 3 {
+		t.Fatalf("Wrong Miss stat %v", l.stats.Miss)
 	}
 
 	v, ok = l.Get(newKey)
