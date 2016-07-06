@@ -6,6 +6,7 @@ package goria
 import (
 	"container/list"
 	"errors"
+	"sync"
 )
 
 type EvictionCallback func(key interface{}, value interface{})
@@ -18,6 +19,7 @@ type GoriaLRU struct {
 	onEvict      EvictionCallback
 	statsEnabled bool
 	stats        CacheStats
+	rwMutex      sync.RWMutex
 }
 
 type CacheStats struct {
@@ -57,11 +59,15 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback, statsEnabled
 
 func (c *GoriaLRU) Put(key, value interface{}) {
 	if item, ok := c.items[key]; ok {
+		c.rwMutex.Lock()
+		defer c.rwMutex.Unlock()
 		c.evictionList.MoveToFront(item)
 		item.Value.(*entry).value = value
 		return
 	}
 
+	c.rwMutex.Lock()
+	defer c.rwMutex.Unlock()
 	item := &entry{key, value}
 	element := c.evictionList.PushFront(item)
 	c.items[key] = element
