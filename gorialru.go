@@ -60,14 +60,13 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback, statsEnabled
 func (c *GoriaLRU) Put(key, value interface{}) {
 	if item, ok := c.items[key]; ok {
 		c.rwMutex.Lock()
-		defer c.rwMutex.Unlock()
 		c.evictionList.MoveToFront(item)
 		item.Value.(*entry).value = value
+		c.rwMutex.Unlock()
 		return
 	}
 
 	c.rwMutex.Lock()
-	defer c.rwMutex.Unlock()
 	item := &entry{key, value}
 	element := c.evictionList.PushFront(item)
 	c.items[key] = element
@@ -79,6 +78,7 @@ func (c *GoriaLRU) Put(key, value interface{}) {
 	if c.IsStatsEnabled() {
 		c.stats.Items++
 	}
+	c.rwMutex.Unlock()
 }
 
 func (c *GoriaLRU) PutAll(m map[interface{}]interface{}) {
