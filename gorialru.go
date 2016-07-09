@@ -6,7 +6,6 @@ package goria
 import (
 	"container/list"
 	"errors"
-	"sync"
 )
 
 type EvictionCallback func(key interface{}, value interface{})
@@ -19,7 +18,6 @@ type GoriaLRU struct {
 	onEvict      EvictionCallback
 	statsEnabled bool
 	stats        CacheStats
-	rwMutex      sync.RWMutex
 }
 
 type CacheStats struct {
@@ -59,14 +57,11 @@ func newGoriaLRU(name string, size int, evictionC EvictionCallback, statsEnabled
 
 func (c *GoriaLRU) Put(key, value interface{}) {
 	if item, ok := c.items[key]; ok {
-		c.rwMutex.Lock()
 		c.evictionList.MoveToFront(item)
 		item.Value.(*entry).value = value
-		c.rwMutex.Unlock()
 		return
 	}
 
-	c.rwMutex.Lock()
 	item := &entry{key, value}
 	element := c.evictionList.PushFront(item)
 	c.items[key] = element
@@ -78,7 +73,6 @@ func (c *GoriaLRU) Put(key, value interface{}) {
 	if c.IsStatsEnabled() {
 		c.stats.Items++
 	}
-	c.rwMutex.Unlock()
 }
 
 func (c *GoriaLRU) PutAll(m map[interface{}]interface{}) {
@@ -90,6 +84,7 @@ func (c *GoriaLRU) PutAll(m map[interface{}]interface{}) {
 func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 	var element, exists = c.items[key]
 	if !exists && element == nil {
+
 		item := &entry{key, value}
 		element := c.evictionList.PushFront(item)
 		c.items[key] = element
@@ -106,6 +101,7 @@ func (c *GoriaLRU) PutIfAbsent(key, value interface{}) bool {
 }
 
 func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
+
 	if c.IsStatsEnabled() {
 		c.stats.Gets++
 	}
@@ -114,11 +110,14 @@ func (c *GoriaLRU) Get(key interface{}) (value interface{}, exists bool) {
 		if c.IsStatsEnabled() {
 			c.stats.Hits++
 		}
+
 		return item.Value.(*entry).value, true
 	}
+
 	if c.IsStatsEnabled() {
 		c.stats.Miss++
 	}
+
 	return
 }
 
