@@ -3,16 +3,32 @@
 	"ignore": "test",
 	"package": [
 		{
+			"path": "container/list",
+			"revision": ""
+		},
+		{
+			"path": "errors",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "sgh1Rk4OObKKYZ6Sldnvq+nR730=",
 			"path": "github.com/oscerd/goria",
-			"revision": "4d65fc6e0ac661f751ad7e97f98d51a5c01fd74f",
-			"revisionTime": "2016-10-08T09:22:05Z"
+			"revision": "aefd27cca371faea1918c7eb7d74c70e1fa8cbd4",
+			"revisionTime": "2016-10-08T10:10:10Z"
 		},
 		{
 			"checksumSHA1": "oYfJlt4Hod3kvHyu0Ph3gX7Nsvk=",
 			"path": "github.com/oscerd/goria/gorialru",
-			"revision": "4d65fc6e0ac661f751ad7e97f98d51a5c01fd74f",
-			"revisionTime": "2016-10-08T09:22:05Z"
+			"revision": "aefd27cca371faea1918c7eb7d74c70e1fa8cbd4",
+			"revisionTime": "2016-10-08T10:10:10Z"
+		},
+		{
+			"path": "sync",
+			"revision": ""
+		},
+		{
+			"path": "testing",
+			"revision": ""
 		}
 	],
 	"rootPath": "github.com/oscerd/goria"
