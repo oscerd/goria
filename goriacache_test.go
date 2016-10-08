@@ -21,4 +21,37 @@ func TestGoriaCache(t *testing.T) {
 	if v != 255 && !ok {
 		t.Fatalf("255 should be in the cache with key 255")
 	}
+
+	keyValuesSet := map[interface{}]interface{}{
+		10: 10,
+		20: 20,
+		30: 30,
+		40: 40,
+	}
+
+	returnedKeyValuesSet := make(map[interface{}]interface{})
+	returnedKeyValuesSet = cache.GetAll(keyValuesSet)
+
+	for k, v := range keyValuesSet {
+		if returnedKeyValuesSet[k] != v {
+			t.Fatalf("key %v should have value %v", k, v)
+		}
+	}
+
+	keyValuesSet = map[interface{}]interface{}{
+		10: 11,
+		20: 22,
+		30: 33,
+		40: 44,
+	}
+
+	cache.PutAll(keyValuesSet)
+
+	returnedKeyValuesSet = cache.GetAll(keyValuesSet)
+
+	for k, v := range keyValuesSet {
+		if returnedKeyValuesSet[k] != v {
+			t.Fatalf("key %v should have value %v", k, v)
+		}
+	}
 }
