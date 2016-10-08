@@ -56,4 +56,14 @@ func TestGoriaCache(t *testing.T) {
 			t.Fatalf("key %v should have value %v", k, v)
 		}
 	}
+
+	ok = cache.Replace(40, 44, 40)
+	if !ok {
+		t.Fatalf("err: %v", err)
+	}
+
+	v, ok = cache.Get(40)
+	if !ok && v != 40 {
+		t.Fatalf("key %v should have value %v", 40, 40)
+	}
 }
