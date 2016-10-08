@@ -36,11 +36,25 @@ func (c *GoriaCache) Get(key interface{}) (interface{}, bool) {
 	return c.cache.Get(key)
 }
 
+// GetAll return a set of Key/Value pairs.
+func (c *GoriaCache) GetAll(m map[interface{}]interface{}) map[interface{}]interface{} {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	return c.cache.GetAll(m)
+}
+
 // Put add an entry in the cache
 func (c *GoriaCache) Put(key interface{}, value interface{}) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	c.cache.Put(key, value)
+}
+
+// PutAll return a set of Key/Value pairs.
+func (c *GoriaCache) PutAll(m map[interface{}]interface{}) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	c.cache.PutAll(m)
 }
 
 // Remove an entry with a specific value and key
@@ -62,4 +76,11 @@ func (c *GoriaCache) Stats() gorialru.CacheStats {
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	return c.cache.GetStats()
+}
+
+// IsStatsEnabled is a method used to check if stats are enabled or not
+func (c *GoriaCache) IsStatsEnabled() bool {
+	c.lock.RLock()
+	defer c.lock.RUnlock()
+	return c.cache.IsStatsEnabled()
 }
