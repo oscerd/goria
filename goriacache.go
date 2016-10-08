@@ -77,3 +77,10 @@ func (c *GoriaCache) Stats() gorialru.CacheStats {
 	defer c.lock.RUnlock()
 	return c.cache.GetStats()
 }
+
+// IsStatsEnabled is a method used to check if stats are enabled or not
+func (c *GoriaCache) IsStatsEnabled() bool {
+	c.lock.RLock()
+	defer c.lock.RUnlock()
+	return c.cache.IsStatsEnabled()
+}

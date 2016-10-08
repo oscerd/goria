@@ -13,8 +13,10 @@ func TestGoriaCache(t *testing.T) {
 		cache.Put(i, i)
 	}
 
-	if cache.Stats().Items != 256 {
-		t.Fatalf("Wrong Items stats %v", cache.Stats().Items)
+	if cache.IsStatsEnabled() {
+		if cache.Stats().Items != 256 {
+			t.Fatalf("Wrong Items stats %v", cache.Stats().Items)
+		}
 	}
 
 	v, ok := cache.Get(255)

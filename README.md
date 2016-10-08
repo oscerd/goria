@@ -6,24 +6,34 @@ Goria is a Golang Cache that attempts to provide a Golang implementation of JSR-
 
 Goria is based on SimpleLru by Hashicorp https://github.com/hashicorp/golang-lru
 
-Working with Goria is simple
+Working with a GoriaCache is simple
 
 ```golang
-l, err := newGoriaLRU("sample", 128, nil, true)
+cache, err := NewWithEvict("sample", 128, nil, true)
 if err != nil {
 	t.Fatalf("err: %v", err)
 }
 for i := 0; i < 256; i++ {
-	l.Put(i, i)
+	cache.Put(i, i)
 }
-key, value := 253, 22
-l.PutIfAbsent(key, value)
-l.Replace(key, value, 23)
-l.ReplaceWithKeyOnly(key, 24)
-l.RemoveWithKeyOnly(key)
-l.RemoveAll()
-if l.IsStatsEnabled() {
-	fmt.Printf("Evictions %v\n", l.GetStats().Evictions)
-	fmt.Printf("Items %v\n", l.GetStats().Items)
+v, ok := cache.Get(255)
+keyValuesSet := map[interface{}]interface{}{
+	10: 10,
+	20: 20,
+	30: 30,
+	40: 40,
+}
+returnedKeyValuesSet := make(map[interface{}]interface{})
+returnedKeyValuesSet = cache.GetAll(keyValuesSet)
+keyValuesSet = map[interface{}]interface{}{
+	10: 11,
+	20: 22,
+	30: 33,
+	40: 44,
+}
+cache.PutAll(keyValuesSet)
+if cache.IsStatsEnabled() {
+	fmt.Printf("Evictions %v\n", cache.Stats().Evictions)
+	fmt.Printf("Items %v\n", cache.Stats().Items)
 }
 ```
