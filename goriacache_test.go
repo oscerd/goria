@@ -66,4 +66,9 @@ func TestGoriaCache(t *testing.T) {
 	if !ok && v != 40 {
 		t.Fatalf("key %v should have value %v", 40, 40)
 	}
+
+	ok = cache.Remove(40, 40)
+	if !ok {
+		t.Fatalf("err: %v", err)
+	}
 }
