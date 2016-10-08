@@ -1,6 +1,19 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"checksumSHA1": "sgh1Rk4OObKKYZ6Sldnvq+nR730=",
+			"path": "github.com/oscerd/goria",
+			"revision": "4d65fc6e0ac661f751ad7e97f98d51a5c01fd74f",
+			"revisionTime": "2016-10-08T09:22:05Z"
+		},
+		{
+			"checksumSHA1": "oYfJlt4Hod3kvHyu0Ph3gX7Nsvk=",
+			"path": "github.com/oscerd/goria/gorialru",
+			"revision": "4d65fc6e0ac661f751ad7e97f98d51a5c01fd74f",
+			"revisionTime": "2016-10-08T09:22:05Z"
+		}
+	],
 	"rootPath": "github.com/oscerd/goria"
 }
