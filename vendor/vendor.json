@@ -13,14 +13,14 @@
 		{
 			"checksumSHA1": "sgh1Rk4OObKKYZ6Sldnvq+nR730=",
 			"path": "github.com/oscerd/goria",
-			"revision": "aefd27cca371faea1918c7eb7d74c70e1fa8cbd4",
-			"revisionTime": "2016-10-08T10:10:10Z"
+			"revision": "138e044796b5fd593d194ab53cd4c30c6fcb4ebe",
+			"revisionTime": "2016-10-08T10:41:12Z"
 		},
 		{
 			"checksumSHA1": "oYfJlt4Hod3kvHyu0Ph3gX7Nsvk=",
 			"path": "github.com/oscerd/goria/gorialru",
-			"revision": "aefd27cca371faea1918c7eb7d74c70e1fa8cbd4",
-			"revisionTime": "2016-10-08T10:10:10Z"
+			"revision": "138e044796b5fd593d194ab53cd4c30c6fcb4ebe",
+			"revisionTime": "2016-10-08T10:41:12Z"
 		},
 		{
 			"path": "sync",
