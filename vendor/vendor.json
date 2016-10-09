@@ -17,10 +17,10 @@
 			"revisionTime": "2016-10-09T07:11:38Z"
 		},
 		{
-			"checksumSHA1": "oYfJlt4Hod3kvHyu0Ph3gX7Nsvk=",
+			"checksumSHA1": "21lGc34TTmEKCgfJGLr6y0sXMGg=",
 			"path": "github.com/oscerd/goria/gorialru",
-			"revision": "d5eb796b6b8eacaa36c2358d0f30f76bf876ce9b",
-			"revisionTime": "2016-10-09T07:11:38Z"
+			"revision": "9628cfc748824c83c0e6546a906b5cbffaa75f06",
+			"revisionTime": "2016-10-09T07:56:32Z"
 		},
 		{
 			"path": "sync",

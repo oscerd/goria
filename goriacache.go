@@ -19,7 +19,7 @@ func New(name string, size int, statsEnabled bool) (*GoriaCacheLRU, error) {
 
 // NewWithEvict constructs a fixed size, named cache with the given eviction and statsEnabled or not
 func NewWithEvict(name string, size int, onEvicted func(key interface{}, value interface{}), statsEnabled bool) (*GoriaCacheLRU, error) {
-	goriaLru, err := gorialru.NewGoriaLRU(name, size, onEvicted, statsEnabled)
+	goriaLru, err := gorialru.New(name, size, onEvicted, statsEnabled)
 	if err != nil {
 		return nil, err
 	}

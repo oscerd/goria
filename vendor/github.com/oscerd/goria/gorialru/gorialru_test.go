@@ -4,7 +4,7 @@ import "testing"
 
 func TestGoria(t *testing.T) {
 
-	l, err := NewGoriaLRU("sample", 128, nil, true)
+	l, err := New("sample", 128, nil, true)
 
 	if err != nil {
 		t.Fatalf("err: %v", err)

@@ -33,7 +33,7 @@ type entry struct {
 	value interface{}
 }
 
-func NewGoriaLRU(name string, size int, evictionC EvictionCallback, statsEnabled bool) (*GoriaLRU, error) {
+func New(name string, size int, evictionC EvictionCallback, statsEnabled bool) (*GoriaLRU, error) {
 	if size <= 0 {
 		return nil, errors.New("The Goria Cache need a positive value as size")
 	}
