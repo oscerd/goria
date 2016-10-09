@@ -8,7 +8,7 @@ import (
 
 // GoriaCache is a thread-safe fixed size LRU cache.
 type GoriaCache struct {
-	cache *gorialru.GoriaLRU
+	cache GenericCache
 	lock  sync.RWMutex
 }
 
