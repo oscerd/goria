@@ -1,4 +1,4 @@
-package goriacache
+package goriacachelru
 
 import "testing"
 

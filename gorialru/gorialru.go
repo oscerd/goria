@@ -8,6 +8,29 @@ import (
 	"errors"
 )
 
+type GenericCache interface {
+	New(name string, size int, evictionC EvictionCallback, statsEnabled bool) (*GenericCache, error)
+	Put(key, value interface{})
+	PutAll(m map[interface{}]interface{})
+	PutIfAbsent(key, value interface{})
+	Get(key interface{}) (value interface{}, exists bool)
+	GetAll(m map[interface{}]interface{}) map[interface{}]interface{}
+	Replace(key, oldValue interface{}, newValue interface{}) bool
+	ReplaceWithKeyOnly(key, newValue interface{}) bool
+	GetAndReplace(key interface{}, newValue interface{}) interface{}
+	RemoveWithKeyOnly(key interface{}) bool
+	Remove(key interface{}, oldValue interface{}) bool
+	RemoveAll(m map[interface{}]interface{})
+	RemoveAllWithoutParameters()
+	GetAndRemove(key interface{}) interface{}
+	Keys() []interface{}
+	ContainsKey(key interface{}) bool
+	Len() int
+	GetName() string
+	IsStatsEnabled() bool
+	GetStats() CacheStats
+}
+
 type EvictionCallback func(key interface{}, value interface{})
 
 type GoriaLRU struct {
