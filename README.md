@@ -37,3 +37,5 @@ if cache.IsStatsEnabled() {
 	fmt.Printf("Items %v\n", cache.Stats().Items)
 }
 ```
+
+Currently we have LRU and MRU policy caches.
